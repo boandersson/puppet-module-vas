@@ -517,7 +517,7 @@ class vas (
       # it will join the domain with help of the lastjoin file.
       # If the domain_change_real fact is false, it will fail the compilation and warn
       # of the mismatching realm.
-      if $::vas_domain != $realm and $::vas_domain != undef  {
+      if $::vas_domain != $realm and $::vas_domain != undef and $::vas_domain != '' {
         if $domain_change_real == true {
           exec { 'vas_change_domain':
             # This command executes the result of the sed command, puts the log from
