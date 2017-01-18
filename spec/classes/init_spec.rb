@@ -792,6 +792,23 @@ describe 'vas' do
       it { should_not contain_exec('vasinst') }
     end
 
+    context 'with realm set and vas not joined (vas_domain fact empty)' do
+      let :facts do
+        default_facts.merge(
+          {
+            :vas_domain => '',
+          }
+        )
+      end
+      let :params do
+        {
+          :realm      => 'realm.example.com',
+        }
+      end
+      it { should contain_class('vas') }
+      it { should contain_exec('vasinst') }
+    end
+
     # Domain change spec tests
     context 'with domain_change set to false and matching domains' do
       let :params do
@@ -812,7 +829,7 @@ describe 'vas' do
         }
       end
       it 'should fail' do
-        expect { should contain_class('vas') }.to raise_error(Puppet::Error, /VAS domain missmatch!/)
+        expect { should contain_class('vas') }.to raise_error(Puppet::Error, /VAS domain mismatch!/)
       end
     end
 
