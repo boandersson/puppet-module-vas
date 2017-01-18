@@ -373,6 +373,12 @@ Path for script to set value of delusercheck-script in [vasd] section of vas.con
 
 - *Default*: 'UNSET'
 
+vas_conf_vasd_netgroup_mode
+---------------------------
+String to be used to set value of netgroup-mode in the [vasd] section of vas.conf. See VAS.CONF(5) for more info.
+
+- *Default*: 'UNSET'
+
 vas_conf_vasd_username_attr_name
 --------------------------------
 String to be used for username-attr-name  in [vasd] section of vas.conf. See VAS.CONF(5) for more info.

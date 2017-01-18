@@ -227,6 +227,7 @@ describe 'vas' do
           :vas_conf_vasd_group_member_attr_name                 => 'groupMembershipSAM',
           :vas_conf_vasd_memberof_attr_name                     => 'memberOf',
           :vas_conf_vasd_unix_password_attr_name                => 'userPassword',
+          :vas_conf_vasd_netgroup_mode                          => 'NIS',
           :vas_conf_vasd_ws_resolve_uid                         => 'true',
           :vas_conf_vasd_lazy_cache_update_interval             => '5',
           :vas_conf_vasd_password_change_script_timelimit       => '30',
@@ -302,6 +303,7 @@ describe 'vas' do
         | upm-computerou-attr = managedBy
         | password-change-script = /opt/quest/libexec/vas-set-samba-password
         | password-change-script-timelimit = 30
+        | netgroup-mode = NIS
         | username-attr-name = userprincipalname
         | groupname-attr-name = groupprincipalname
         | uid-number-attr-name = employeID
@@ -336,6 +338,29 @@ describe 'vas' do
           'mode'    => '0644',
           'content' => content,
         })
+      end
+    end
+
+    netgroup_validations = {
+      :valid   => %w(NSS NIS OFF),
+      :invalid => %w(true undef nss nis off),
+    }
+
+    netgroup_validations[:valid].each do |valid|
+      context "with vas_conf_vasd_netgroup_mode set to #{valid}" do
+        let(:params) { { :vas_conf_vasd_netgroup_mode => valid, } }
+        it do
+          should contain_file('vas_config').with_content(/netgroup-mode = #{valid}/)
+        end
+      end
+    end
+
+    netgroup_validations[:invalid].each do |invalid|
+      context "with vas_conf_vasd_netgroup_mode set to #{invalid}" do
+        let(:params) { { :vas_conf_vasd_netgroup_mode => invalid, } }
+        it 'should fail' do
+          expect { should contain_class(subject) }.to raise_error(Puppet::Error, /Valid values are NSS, NIS and OFF/)
+        end
       end
     end
 
